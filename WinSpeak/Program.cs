@@ -3,80 +3,111 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SpeechLib;
+using System.Speech.Synthesis;
+using System.Speech.AudioFormat;
+using System.Globalization;
 
 namespace WinSpeak
 {
     public class VSynth
     {
-        SpVoice synth;
-        SpFileStream outputstream;
-        String lang = "en-US";
-        int langnum = 409;
-        String[] knownlang = { "en-US", "ja-JP" };
-        int[] knownlangnum = { 409, 411 }; 
+        SpeechSynthesizer synth;
+        List<InstalledVoice> voices;
+        CultureInfo lang;
         int rate = 0;
         int volume = 100;
         //
         public VSynth()
         {
-            synth = new SpVoice();
-            outputstream = null;
+            synth = new SpeechSynthesizer();
+            synth.SetOutputToDefaultAudioDevice();
+            voices = new List<InstalledVoice>();
+            foreach (var voice in synth.GetInstalledVoices())
+            {
+                voices.Add(voice);
+            }
+            setVoice(0);
         }
         public void setLang(String x)
         {
-            for (int i = 0; i < knownlang.Length; i++)
-            {
-                if (x == knownlang[i])
-                {
-                    lang = knownlang[i];
-                    langnum = knownlangnum[i];
-                    return;
-                }
-            }
-            throw new Exception("Unknown language: " + x);
+//            for (int i = 0; i < knownlang.Length; i++)
+//            {
+//                if (x == knownlang[i])
+//                {
+//                    lang = knownlang[i];
+//                    langnum = knownlangnum[i];
+//                    return;
+//                }
+//            }
+ //           throw new Exception("Unknown language: " + x);
         }
         public void listVoice()
         {
-            ISpeechObjectTokens VoiceInfo = synth.GetVoices("Language="+langnum, "");
-            for (int i = 0; i < VoiceInfo.Count; i++)
+            for (var i = 0; i < voices.Count; i++)
             {
-                ISpeechObjectToken tok = VoiceInfo.Item(i);
-                Console.WriteLine(i.ToString() + ": " + tok.GetAttribute("Name"));
+                Console.WriteLine(i.ToString() + ": " +
+                    voices[i].VoiceInfo.Name+
+                    " ("+voices[i].VoiceInfo.Culture.ToString()+")");
             }
         }
         public void setVoice(int i)
         {
-            ISpeechObjectTokens VoiceInfo = synth.GetVoices("Language=" + langnum, "");
-            if (i < 0 || VoiceInfo.Count <= i)
+            if (i < 0 || voices.Count <= i)
             {
                 throw new Exception("Illegal voice number");
             }
-            synth.Voice = VoiceInfo.Item(i);
+            synth.SelectVoice(voices[i].VoiceInfo.Name);
+            lang = voices[i].VoiceInfo.Culture;
         }
         public void setOutputFile(String file)
         {
-            if (outputstream != null)
-                outputstream.Close();
-            outputstream = new SpFileStream();
-            outputstream.Open(file, SpeechStreamFileMode.SSFMCreateForWrite, false);
-            synth.AudioOutputStream = outputstream;
+            synth.SetOutputToWaveFile(file);
         }
         public void speak()
         {
-            for (;;)
+            for (; ; )
             {
                 String line = Console.ReadLine();
                 if (line == ".") break;
-                synth.Speak("<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='"+lang+"'> "+line+"</speak>");
+                var speechcontent = "<?xml version=\"1.0\"?>";
+                speechcontent += "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\""+
+                    lang.ToString()+"\">";
+                string volumestr = "";
+                if (volume != 100)
+                {
+                    volumestr = volume.ToString();
+                }
+                speechcontent += "<s>";
+                string prosody = "";
+                if (rate != 0)
+                {
+                    prosody += "rate=\"" + (100 + rate).ToString() + "%\" ";
+                }
+                if (volumestr != "")
+                {
+                    prosody += "volume=\""+volumestr+"\" ";
+                }
+                if (prosody != "")
+                {
+                    speechcontent += "<prosody "+prosody+">";
+                    speechcontent += line;
+                    speechcontent += "</prosody>";
+                }
+                else
+                {
+                    speechcontent += line;
+
+                }
+                speechcontent += "</s>";
+                speechcontent += "</speak>";
+
+                Console.WriteLine(speechcontent);
+                synth.SpeakSsml(speechcontent);
             }
-            if (outputstream != null)
-                outputstream.Close();
         }
         public void setRate(int r)
         {
             rate = r;
-            synth.Rate = r;
         }
         public void setVolume(int v)
         {

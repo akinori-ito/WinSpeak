@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 14 for Windows Desktop
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinSpeak", "WinSpeak\WinSpeak.csproj", "{DDF9E57B-404A-4E1C-823E-8879F3673311}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinSpeak", "WinSpeak\WinSpeak.csproj", "{6A9E6D74-7917-4385-9845-56E90E60FA90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,12 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DDF9E57B-404A-4E1C-823E-8879F3673311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DDF9E57B-404A-4E1C-823E-8879F3673311}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DDF9E57B-404A-4E1C-823E-8879F3673311}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DDF9E57B-404A-4E1C-823E-8879F3673311}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A9E6D74-7917-4385-9845-56E90E60FA90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A9E6D74-7917-4385-9845-56E90E60FA90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A9E6D74-7917-4385-9845-56E90E60FA90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A9E6D74-7917-4385-9845-56E90E60FA90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A13ED06-20A4-4915-9E4D-8F6572B8416A}
 	EndGlobalSection
 EndGlobal
